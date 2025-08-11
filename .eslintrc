@@ -59,6 +59,14 @@
     "react/no-unescaped-entities": "warn",
     "react/jsx-props-no-spreading": "off",
     "operator-assignment": ["warn", "always"],
-    "radix": "off"
+    "radix": "off",
+    
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "function-declaration",
+        "unnamedComponents": "function-expression"
+      }
+    ]
   }
 }
