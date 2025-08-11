@@ -2,13 +2,13 @@ import './cartsummary.css'
 import {useContext} from 'react'
 import ReactContext from '../../context/ReactContext'
 
-const CartSummary = props => {
+function CartSummary(props) {
   const {toggleCheckout} = props
   const {cartList} = useContext(ReactContext)
 
   const renderPrice = () => {
     const totalAmount = cartList.reduce(
-      (acc, item) => acc + item.price.slice(1) * item.count,
+      (acc, item) => acc + Number(item.price.slice(1)) * item.count,
       0,
     )
     return totalAmount
