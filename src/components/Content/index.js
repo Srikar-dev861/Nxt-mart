@@ -1,23 +1,22 @@
 import './content.css'
 import Product from '../Product'
 
-const Content = props => {
-  const {productDetails} = props
+function Content({productDetails}) {
   return (
-    <>
-      <ul className="ul-content">
-        {productDetails.map(item => (
-          <li key={item.name} id={item.name} className="li-content">
-            <p className="name1">{item.name} &gt;</p>
-            <ul className="ul-items">
-              {item.products.map(items => (
-                <Product key={items.id} details={items} />
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </>
+    <ul className="ul-content">
+      {productDetails.map(item => (
+        <li key={item.id || item.name} id={item.name} className="li-content">
+          <p className="name1">
+            {item.name} {'>'}
+          </p>
+          <ul className="ul-items">
+            {item.products.map(product => (
+              <Product key={product.id} details={product} />
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
   )
 }
 

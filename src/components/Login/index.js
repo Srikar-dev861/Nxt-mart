@@ -1,50 +1,39 @@
 import './login.css'
-import {Redirect} from 'react-router-dom'
+import {useNavigate, Navigate} from 'react-router-dom'
 import {useState, useContext} from 'react'
 import Cookies from 'js-cookie'
 import {CgProfile} from 'react-icons/cg'
 import {RiRotateLockLine} from 'react-icons/ri'
 import ReactContext from '../../context/ReactContext'
 
-const Login = props => {
+function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errMsg, setErrMsg] = useState('')
   const {setNewTab} = useContext(ReactContext)
+  const navigate = useNavigate()
 
   const onShowPassword = () => {
     const passwordEl = document.getElementById('password')
-    if (passwordEl.type === 'password') {
-      passwordEl.type = 'text'
-    } else {
-      passwordEl.type = 'password'
-    }
+    passwordEl.type = passwordEl.type === 'password' ? 'text' : 'password'
   }
-  let bgColor
-  if (username !== '' && password !== '') {
-    bgColor = 'login-green'
-  } else {
-    bgColor = 'login-ash'
-  }
+
+  const bgColor = username && password ? 'login-green' : 'login-ash'
 
   const onPassword = event => setPassword(event.target.value)
   const onUsername = event => setUsername(event.target.value)
 
   const renderSuccess = jwtToken => {
-    const {history} = props
     Cookies.set('jwt_token', jwtToken, {expires: 2})
     setNewTab('Home')
-    history.replace('/')
+    navigate('/', {replace: true})
   }
 
   const onSubmit = async event => {
+    event.preventDefault()
+    setErrMsg('')
     try {
-      event.preventDefault()
-      setErrMsg('')
-      const userDetails = {
-        username,
-        password,
-      }
+      const userDetails = {username, password}
       const options = {
         method: 'POST',
         body: JSON.stringify(userDetails),
@@ -60,13 +49,13 @@ const Login = props => {
         setErrMsg(data.error_msg)
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
   const jwtToken = Cookies.get('jwt_token')
   if (jwtToken) {
-    return <Redirect to="/" />
+    return <Navigate to="/" replace />
   }
 
   return (
@@ -111,12 +100,12 @@ const Login = props => {
         </div>
         <button
           type="submit"
-          disabled={username === '' || password === ''}
+          disabled={!username || !password}
           className={`login-btn ${bgColor}`}
         >
           Login
         </button>
-        {errMsg !== '' && <p className="error-msg">{errMsg}</p>}
+        {errMsg && <p className="error-msg">{errMsg}</p>}
       </form>
     </div>
   )

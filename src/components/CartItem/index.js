@@ -2,16 +2,16 @@ import './cartitem.css'
 import {useContext} from 'react'
 import ReactContext from '../../context/ReactContext'
 
-const CartItem = props => {
-  const {product} = props
-  const {decremantCartItem, incrementCartItem} = useContext(ReactContext)
+function CartItem({product}) {
+  const {decrementCartItem, incrementCartItem} = useContext(ReactContext)
   const {name, price, weight, image, count: quantity} = product
 
   const onIncrement = () => {
-    incrementCartItem(product, quantity + 1)
+    incrementCartItem(product)
   }
+
   const onDecrement = () => {
-    decremantCartItem(product, quantity - 1)
+    decrementCartItem(product)
   }
 
   return (
@@ -31,6 +31,7 @@ const CartItem = props => {
             data-testid="decrement-quantity"
             onClick={onDecrement}
             className="btn"
+            disabled={quantity <= 1} // Prevent negative values
           >
             -
           </button>

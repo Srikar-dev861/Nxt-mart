@@ -1,61 +1,67 @@
 import './home.css'
 import {useState, useEffect} from 'react'
 import Cookies from 'js-cookie'
-import Loader from 'react-loader-spinner'
+import {ThreeDots} from 'react-loader-spinner'
 import Header from '../Header'
 import CategoryItems from '../CategoryItems'
 import Content from '../Content'
 import Footer from '../Footer'
 import CategorySmItem from '../CategorySmItem'
 
-const constApiStatus = {
+const API_STATUS = {
   INITIAL: 'INITIAL',
   IN_PROGRESS: 'IN_PROGRESS',
   SUCCESS: 'SUCCESS',
   FAILURE: 'FAILURE',
 }
 
-const Home = () => {
-  const [productsData, setProductData] = useState([])
-  const [apiStatus, setApiStatus] = useState(constApiStatus.INITIAL)
+function Home() {
+  const [productsData, setProductsData] = useState([])
+  const [apiStatus, setApiStatus] = useState(API_STATUS.INITIAL)
   const [categoryId, setCategoryId] = useState('all')
 
   const onChangeCategoryId = id => {
     setCategoryId(id)
   }
 
-  const nxtMartAPIURL = async () => {
-    setApiStatus(constApiStatus.IN_PROGRESS)
-    const apiUrl = 'https://apis2.ccbp.in/nxt-mart/category-list-details'
-    const jwtToken = Cookies.get('jwt_token')
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${jwtToken}`,
-      },
-    }
-    const response = await fetch(apiUrl, options)
-    if (response.ok) {
-      const data = await response.json()
-      setProductData(data.categories)
-      setApiStatus(constApiStatus.SUCCESS)
-    } else {
-      setApiStatus(constApiStatus.FAILURE)
+  const fetchCategoryList = async () => {
+    try {
+      setApiStatus(API_STATUS.IN_PROGRESS)
+      const apiUrl = 'https://apis2.ccbp.in/nxt-mart/category-list-details'
+      const jwtToken = Cookies.get('jwt_token')
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      }
+      const response = await fetch(apiUrl, options)
+      if (response.ok) {
+        const data = await response.json()
+        setProductsData(data.categories)
+        setApiStatus(API_STATUS.SUCCESS)
+      } else {
+        setApiStatus(API_STATUS.FAILURE)
+      }
+    } catch (error) {
+      console.error(error)
+      setApiStatus(API_STATUS.FAILURE)
     }
   }
 
   useEffect(() => {
-    nxtMartAPIURL()
+    fetchCategoryList()
   }, [])
 
   const renderLoading = () => (
     <div className="loader-container" data-testid="loader">
-      <Loader type="ThreeDots" color="#263868" height={100} width={100} />
+      <ThreeDots height={80} width={80} color="#263868" />
     </div>
   )
+
   const onRetryBtn = () => {
-    nxtMartAPIURL()
+    fetchCategoryList()
   }
 
   const renderFailure = () => (
@@ -95,11 +101,11 @@ const Home = () => {
 
   const renderSwitchOperation = () => {
     switch (apiStatus) {
-      case constApiStatus.IN_PROGRESS:
+      case API_STATUS.IN_PROGRESS:
         return renderLoading()
-      case constApiStatus.SUCCESS:
+      case API_STATUS.SUCCESS:
         return renderSuccess()
-      case constApiStatus.FAILURE:
+      case API_STATUS.FAILURE:
         return renderFailure()
       default:
         return null

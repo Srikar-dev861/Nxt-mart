@@ -2,17 +2,21 @@ import './product.css'
 import {useState, useContext} from 'react'
 import ReactContext from '../../context/ReactContext'
 
-const Product = props => {
+function Product(props) {
   const [quantity, setQuantity] = useState(0)
-  const {decremantCartItem, incrementCartItem} = useContext(ReactContext)
+  const {decrementCartItem, incrementCartItem} = useContext(ReactContext)
   const {details} = props
   const {name, price, weight, image} = details
+
   const onDecrement = () => {
-    setQuantity(prevqun => prevqun - 1)
-    decremantCartItem(details, quantity - 1)
+    if (quantity > 0) {
+      setQuantity(prev => prev - 1)
+      decrementCartItem(details, quantity - 1)
+    }
   }
-  const onInrement = () => {
-    setQuantity(prevqun => prevqun + 1)
+
+  const onIncrement = () => {
+    setQuantity(prev => prev + 1)
     incrementCartItem(details, quantity + 1)
   }
 
@@ -27,17 +31,17 @@ const Product = props => {
           <p className="weight">{weight}</p>
           <p className="price">{price}</p>
         </div>
-        {quantity === 0 && (
+
+        {quantity === 0 ? (
           <button
             type="button"
             data-testid="add-button"
-            onClick={onInrement}
+            onClick={onIncrement}
             className="add-btn"
           >
             Add
           </button>
-        )}
-        {quantity !== 0 && (
+        ) : (
           <div className="quantity-container1">
             <button
               type="button"
@@ -58,7 +62,7 @@ const Product = props => {
               type="button"
               data-testid="increment-count"
               className="btm"
-              onClick={onInrement}
+              onClick={onIncrement}
             >
               +
             </button>
