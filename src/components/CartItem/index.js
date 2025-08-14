@@ -1,9 +1,8 @@
 import './cartitem.css'
-import {useContext} from 'react'
-import ReactContext from '../../context/ReactContext'
+import {useReactContext} from '../../context/ReactContext' // ✅ modern hook
 
 function CartItem({product}) {
-  const {decrementCartItem, incrementCartItem} = useContext(ReactContext)
+  const {decrementCartItem, incrementCartItem} = useReactContext()
   const {name, price, weight, image, count: quantity} = product
 
   const onIncrement = () => {

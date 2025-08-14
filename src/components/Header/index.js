@@ -1,14 +1,14 @@
 import './headerlg.css'
 import {Link, useNavigate} from 'react-router-dom'
 import Cookies from 'js-cookie'
-import {useContext} from 'react'
 import {BiLogOut} from 'react-icons/bi'
 import {CiHome, CiShoppingCart} from 'react-icons/ci'
-import ReactContext from '../../context/ReactContext'
+import {useReactContext} from '../../context/ReactContext' // ✅ Modern hook
 
 function Header() {
   const navigate = useNavigate()
-  const {activeTab, setNewTab} = useContext(ReactContext)
+  const {activeTab, setNewTab} = useReactContext() // ✅ Clean modern context access
+
   const homeTab = activeTab === 'Home' ? 'green-color' : ''
   const cartTab = activeTab === 'Cart' ? 'green-color' : ''
 

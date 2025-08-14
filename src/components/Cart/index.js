@@ -1,16 +1,16 @@
 import './cart.css'
-import {useContext, useState} from 'react'
+import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {IoCheckmarkCircleOutline} from 'react-icons/io5'
 
-import ReactContext from '../../context/ReactContext'
+import {useReactContext} from '../../context/ReactContext'
 import Footer from '../Footer'
 import Header from '../Header'
 import CartItem from '../CartItem'
 import CartSummary from '../CartSummary'
 
 function Cart() {
-  const {cartList, setNewTab} = useContext(ReactContext)
+  const {cartList, setNewTab} = useReactContext()
   const navigate = useNavigate()
   const [isCheckOut, setCheckOut] = useState(false)
 
@@ -64,7 +64,6 @@ function Cart() {
     </div>
   )
 
-  // Decide what to render
   let content = null
   if (cartList.length === 0) {
     content = renderEmptyCart()

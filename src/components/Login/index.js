@@ -1,27 +1,21 @@
 import './login.css'
 import {useNavigate, Navigate} from 'react-router-dom'
-import {useState, useContext} from 'react'
+import {useState} from 'react'
 import Cookies from 'js-cookie'
 import {CgProfile} from 'react-icons/cg'
 import {RiRotateLockLine} from 'react-icons/ri'
-import ReactContext from '../../context/ReactContext'
+import {useReactContext} from '../../context/ReactContext'
 
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [errMsg, setErrMsg] = useState('')
-  const {setNewTab} = useContext(ReactContext)
+  const [showPassword, setShowPassword] = useState(false)
+
+  const {setNewTab} = useReactContext()
   const navigate = useNavigate()
 
-  const onShowPassword = () => {
-    const passwordEl = document.getElementById('password')
-    passwordEl.type = passwordEl.type === 'password' ? 'text' : 'password'
-  }
-
   const bgColor = username && password ? 'login-green' : 'login-ash'
-
-  const onPassword = event => setPassword(event.target.value)
-  const onUsername = event => setUsername(event.target.value)
 
   const renderSuccess = jwtToken => {
     Cookies.set('jwt_token', jwtToken, {expires: 2})
@@ -75,29 +69,37 @@ function Login() {
             type="text"
             id="username"
             value={username}
-            onChange={onUsername}
+            onChange={e => setUsername(e.target.value)}
             className="input"
           />
         </div>
+
         <label htmlFor="password" className="label">
           PASSWORD
         </label>
         <div className="input-container">
           <RiRotateLockLine />
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={onPassword}
+            onChange={e => setPassword(e.target.value)}
             id="password"
             className="input"
           />
         </div>
+
         <div>
-          <input type="checkbox" onClick={onShowPassword} id="checkbox" />
+          <input
+            type="checkbox"
+            checked={showPassword}
+            onChange={() => setShowPassword(prev => !prev)}
+            id="checkbox"
+          />
           <label htmlFor="checkbox" className="label">
             Show Password
           </label>
         </div>
+
         <button
           type="submit"
           disabled={!username || !password}

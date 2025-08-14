@@ -1,10 +1,8 @@
 import './cartsummary.css'
-import {useContext} from 'react'
-import ReactContext from '../../context/ReactContext'
+import {useReactContext} from '../../context/ReactContext' // ✅ modern hook
 
-function CartSummary(props) {
-  const {toggleCheckout} = props
-  const {cartList} = useContext(ReactContext)
+function CartSummary({toggleCheckout}) {
+  const {cartList} = useReactContext()
 
   const renderPrice = () => {
     const totalAmount = cartList.reduce(
@@ -14,18 +12,14 @@ function CartSummary(props) {
     return totalAmount
   }
 
-  const onCheckOut = () => {
-    toggleCheckout()
-  }
-
   return (
     <div className="summary-div">
-      <h1 className="summaary-p">Total ({cartList.length} items) : </h1>
+      <h1 className="summaary-p">Total ({cartList.length} items) :</h1>
       <p className="price-total" data-testid="total-price">
         {`total order cost ₹ ${renderPrice()}`}
       </p>
 
-      <button type="button" onClick={onCheckOut} className="checkout">
+      <button type="button" onClick={toggleCheckout} className="checkout">
         Checkout
       </button>
     </div>

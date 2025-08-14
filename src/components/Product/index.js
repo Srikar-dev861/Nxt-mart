@@ -1,23 +1,25 @@
 import './product.css'
-import {useState, useContext} from 'react'
-import ReactContext from '../../context/ReactContext'
+import {useState} from 'react'
+import {useReactContext} from '../../context/ReactContext' // ✅ modern context hook
 
-function Product(props) {
+function Product({details}) {
   const [quantity, setQuantity] = useState(0)
-  const {decrementCartItem, incrementCartItem} = useContext(ReactContext)
-  const {details} = props
+  const {decrementCartItem, incrementCartItem} = useReactContext() // ✅ no useContext(ReactContext) anymore
+
   const {name, price, weight, image} = details
 
   const onDecrement = () => {
     if (quantity > 0) {
-      setQuantity(prev => prev - 1)
-      decrementCartItem(details, quantity - 1)
+      const newQuantity = quantity - 1
+      setQuantity(newQuantity)
+      decrementCartItem(details, newQuantity)
     }
   }
 
   const onIncrement = () => {
-    setQuantity(prev => prev + 1)
-    incrementCartItem(details, quantity + 1)
+    const newQuantity = quantity + 1
+    setQuantity(newQuantity)
+    incrementCartItem(details, newQuantity)
   }
 
   return (
