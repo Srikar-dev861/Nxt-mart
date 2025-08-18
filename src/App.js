@@ -5,7 +5,7 @@ import Cart from './components/Cart'
 import NotFound from './components/NotFound'
 import Home from './components/Home'
 import ProtectedRoute from './components/ProtectedRoute'
-import {ReactProvider} from './context/ReactContext' // ✅ Modern Provider
+import {ReactProvider} from './context/ReactContext'
 
 function App() {
   return (

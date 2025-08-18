@@ -1,16 +1,24 @@
 import './cartitem.css'
-import {useReactContext} from '../../context/ReactContext' // ✅ modern hook
+import {useReactContext} from '../../context/ReactContext'
 
 function CartItem({product}) {
-  const {decrementCartItem, incrementCartItem} = useReactContext()
+  const {
+    decrementCartItem,
+    incrementCartItem,
+    removeCartItem,
+  } = useReactContext()
   const {name, price, weight, image, count: quantity} = product
 
   const onIncrement = () => {
-    incrementCartItem(product, quantity + 1)
+    incrementCartItem(product)
   }
 
   const onDecrement = () => {
-    decrementCartItem(product, quantity - 1)
+    if (quantity > 1) {
+      decrementCartItem(product)
+    } else {
+      removeCartItem(product.id)
+    }
   }
 
   return (
@@ -30,7 +38,6 @@ function CartItem({product}) {
             data-testid="decrement-quantity"
             onClick={onDecrement}
             className="btn"
-            disabled={quantity <= 1}
           >
             -
           </button>

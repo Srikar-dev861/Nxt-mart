@@ -1,4 +1,3 @@
-// src/context/ReactContext.js
 import {createContext, useContext, useState, useEffect, useMemo} from 'react'
 
 const ReactContext = createContext()
@@ -23,37 +22,41 @@ export function ReactProvider({children}) {
     localStorage.setItem('activeId', JSON.stringify(activeTab))
   }, [cartList, activeTab])
 
-  const incrementCartItem = (product, quantity) => {
-    const isAlreadyExists = cartList.find(item => item.id === product.id)
-
-    if (!isAlreadyExists) {
-      const newProduct = {...product, count: quantity}
-      setCartList(prev => [...prev, newProduct])
-    } else {
-      setCartList(prev =>
-        prev.map(item =>
-          item.id === product.id ? {...item, count: quantity} : item,
-        ),
-      )
-    }
+  // ✅ Add or increase product count
+  const incrementCartItem = product => {
+    setCartList(prev => {
+      const exists = prev.find(item => item.id === product.id)
+      if (exists) {
+        return prev.map(item =>
+          item.id === product.id ? {...item, count: item.count + 1} : item,
+        )
+      }
+      return [...prev, {...product, count: 1}]
+    })
   }
 
-  const decrementCartItem = (product, quantity) => {
+  // ✅ Decrease count, and remove if count is 0
+  const decrementCartItem = product => {
     setCartList(prev =>
       prev
         .map(item =>
-          item.id === product.id ? {...item, count: quantity} : item,
+          item.id === product.id ? {...item, count: item.count - 1} : item,
         )
         .filter(item => item.count > 0),
     )
   }
 
-  // useMemo prevents re-creating the context object every render
+  // Optional: direct remove
+  const removeCartItem = id => {
+    setCartList(prev => prev.filter(item => item.id !== id))
+  }
+
   const value = useMemo(
     () => ({
       cartList,
       incrementCartItem,
       decrementCartItem,
+      removeCartItem,
       setCartList,
       activeTab,
       setNewTab,
@@ -64,7 +67,7 @@ export function ReactProvider({children}) {
   return <ReactContext.Provider value={value}>{children}</ReactContext.Provider>
 }
 
-// Custom hook for easy usage
+// Custom hook
 export function useReactContext() {
   const context = useContext(ReactContext)
   if (!context) {
