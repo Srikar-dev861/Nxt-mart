@@ -6,11 +6,11 @@ function CartItem({product}) {
   const {name, price, weight, image, count: quantity} = product
 
   const onIncrement = () => {
-    incrementCartItem(product)
+    incrementCartItem(product, quantity + 1)
   }
 
   const onDecrement = () => {
-    decrementCartItem(product)
+    decrementCartItem(product, quantity - 1)
   }
 
   return (
@@ -30,7 +30,7 @@ function CartItem({product}) {
             data-testid="decrement-quantity"
             onClick={onDecrement}
             className="btn"
-            disabled={quantity <= 1} // Prevent negative values
+            disabled={quantity <= 1}
           >
             -
           </button>
